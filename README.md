@@ -8,6 +8,8 @@ This toolset offers an exporter for Houdini and Javascript loading scripts to be
 Showcase : http://gratien-vernier.com/houthreeni \
 More tests will appear in the top-right list as development evolves.
 
+<img src="http://gratien-vernier.com/houthreeni/gifs/pc.gif" width="33%"/><img src="http://gratien-vernier.com/houthreeni/gifs/packed.gif" width="33%"/><img src="http://gratien-vernier.com/houthreeni/gifs/insts.gif" width="33%"/>
+
 ## Features
 
 Can be exported and played back in browser :
