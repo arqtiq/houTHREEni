@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>HouThreeNi Player</title>
+		<style>
+			body { margin: 0; }
+			canvas { display: block; }
+			#timeline {
+				position: absolute;
+				left: 0px; bottom: 0px; width: 100%; height: 50px;
+			}
+			#tl_gui {
+				width: 100% !important
+			}
+		</style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+		<script src="js/OBJLoader.js"></script>
+		<script src="js/OrbitControls.js"></script>
+		<script src="js/jquery.js"></script>
+		<script src="js/dat.gui.js"></script>
+		<script src="js/houthreeni.js"></script>
+		
+		<div id="timeline">
+		</div>
+		
+		<script>
+			var urlParms = new URL(window.location.href).searchParams;
+			
+			// vars
+			var fov = 75;
+			var near = 0.1, far = 1000;
+			var ratio = window.innerWidth / window.innerHeight;
+
+			// create scene
+			var scene = new THREE.Scene();
+			scene.background = new THREE.Color(0x222222);
+			var light = new THREE.AmbientLight(0xFFFFFF, 0.5);
+			scene.add(light);
+			var grid = new THREE.GridHelper(10, 10);
+			scene.add(grid);
+			var box = new THREE.Box3Helper(new THREE.Box3(), 0x555555);
+			box.visible = false;
+			scene.add(box);
+			
+			// renderer
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			document.body.appendChild(renderer.domElement);
+			window.addEventListener('resize', function() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+    			camera.updateProjectionMatrix();
+    			renderer.setSize(window.innerWidth, window.innerHeight);
+			});
+			
+			// camera
+			var camera = new THREE.PerspectiveCamera(fov, ratio, near, far);
+			camera.position.set(0, 2, 5);
+			var controls = new THREE.OrbitControls(camera, renderer.domElement);
+			
+			// gui
+			var gui = new dat.GUI();
+			var guiProxy = { background: "#"+scene.background.getHexString() };
+			var fScene = gui.addFolder("Scene");
+			fScene.open();
+			fScene.add(grid, "visible").name("Display Grid");
+			fScene.add(box, "visible").name("Display BBox");
+			fScene.add(light, "intensity", 0, 1).name("Light Intensity");
+			fScene.addColor(guiProxy, "background").name("Background").onChange(() =>
+				scene.background.set(guiProxy.background));
+			var fFx;
+			
+			// timeline
+			var tl = new dat.GUI({autoPlace: false, closeOnTop: true});
+			var tlProxy = { val: 0 };
+			tl.domElement.id = "tl_gui";
+			timeline.appendChild(tl.domElement);
+			tlController = tl.add(tlProxy, "val", 0, 1).name("Frame").listen().onChange(function(v) {
+				data.fframe = v;
+			});
+			
+			// load geo
+			var data = null;
+			load("export");
+			
+			// loop
+			function update() {
+				requestAnimationFrame(update);
+				
+				controls.update();
+				data.update();
+				
+				tlProxy.val = data.fframe | 0;
+				
+				renderer.render(scene, camera);
+			}
+			update();
+			
+			
+			function load(file) {
+				if(data != null) {
+					data.removeFromScene();
+				}
+				console.log("loading " + file + "...");
+				data = new HTN_Data(scene, "", file+".json", function() {
+					console.log("scene update...");
+					if(data.bbox)
+						box.box = data.bbox;
+
+					if(fFx != null) {
+						gui.removeFolder(fFx);
+					}
+					
+					fFx = gui.addFolder("FX");
+					fFx.open();
+					fFx.add(data, "playing").name("Play");
+					fFx.add(data, "loop").name("Loop");
+					fFx.add(data, "framesPerSecond", 1, 240).name("Frames / Second");
+					fFx.add(data, "subframesInterpolation").name("Interpolate Frames");
+					if(data.pointcloud)
+						fFx.add(data.pointcloud.material, "size", 0.01, 1.0).name("Particles Size");
+					
+					tl.val = 0;
+					tlController.min(0);
+					tlController.max(data.frameCount);
+				});
+			}
+		</script>
+	</body>
+</html>
