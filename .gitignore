@@ -4,3 +4,13 @@ __pycache__/
 
 # C extensions
 *.so
+
+# Houdini scene backups
+backup/
+
+# exports
+export/
+
+# VS
+.vs/
+.vscode/

@@ -2,6 +2,7 @@ from __future__ import print_function
 import hou
 import json
 import os
+from distutils import dir_util
 from collections import OrderedDict
 
 
@@ -86,5 +87,6 @@ class Exporter(object):
 
         if not path.endswith(".json"):
             path += ".json"
+        dir_util.mkpath(os.path.dirname(path))
         with open(path, "w+") as f:
             json.dump(dump, f)
