@@ -46,16 +46,16 @@ Consult the attached *examples.hip* file to learn how to use it with different s
 ### Playback
 
 To use the JS loader, you'll need to copy these files to your web site / app from the **/houdini/scripts/python/houthreeni/host/js** folder :
-- three.js \
+- [three.js](houdini/scripts/python/houthreeni/host/js/three.js) \
 Obviously this is THREE.js framework, copy it if you don't use it yet
-- houthreeni.js \
+- [houthreeni.js](houdini/scripts/python/houthreeni/host/js/houthreeni.js) \
 This is the loader for the files generated from houdini
-- jquery.js \
+- [jquery.js](houdini/scripts/python/houthreeni/host/js/jquery.js) \
 JQuery framework; used to async load JSON file
 
-**dat.gui.js** and **OrbitControls.js** are used for the integrated player (UI and camera controls). They are not mandatory but you can get them too if you want these.
+[dat.gui.js](houdini/scripts/python/houthreeni/host/js/dat.gui.js) and [OrbitControls.js](houdini/scripts/python/houthreeni/host/js/OrbitControls.js) are used for the integrated player (UI and camera controls). They are not mandatory but you can get them too if you want these.
 
-You can consult **../index.html** for an example of integration into a web page.
+You can consult [hou.html](houdini/scripts/python/houthreeni/host/hou.html) for an example of integration into a web page.
 
 ## Future / To-Do
 
