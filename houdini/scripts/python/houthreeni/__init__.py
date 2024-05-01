@@ -19,6 +19,7 @@ def export(node):
     exp_pack = node.evalParm("packed")
     exp_xform = node.evalParm("xform")
     exp_inst = node.evalParm("instance")
+    exp_sprite = node.evalParm("sprite")
     mode = node.evalParm("mode")
     start_frame = node.evalParm("rangex")
     use_xform = exp_xform and exp_inst
@@ -42,14 +43,16 @@ def export(node):
         session.clear_dir(_d)
     
     # pointcloud export
-    in_geo = node.node("IN").geometry()   
+    in_geo = node.node("IN").geometry()
     if mode > 0:        
         session.Current.pointcloud['channels'] = {
             'count': len(in_geo.iterPoints()),
             'mode': ["none","fix","dynamic"][mode],
             'position': not use_xform,
             'transforms': use_xform,
-            'color': node.evalParm("col")
+            'color': node.evalParm("col"),
+            'sprite': {'path': node.evalParm("sprite_path"), 'scale': node.evalParm("sprite_scale")}
+                if exp_sprite else None
         }
     if mode > 0 or exp_pack:
         frames_node = node.node("ALL_FRAMES")
